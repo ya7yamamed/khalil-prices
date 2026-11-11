@@ -92,18 +92,42 @@
   // ===== الحالة في الذاكرة =====
   const state = { categories: [], items: [], settings: null, loaded: false };
 
+  // نسخة محلية من البيانات حتى التطبيق يفتح بلا نت (عرض فقط)
+  const CACHE_KEY = 'kp-data-v1';
+  function saveCache() {
+    try {
+      localStorage.setItem(CACHE_KEY, JSON.stringify({
+        at: new Date().toISOString(), categories: state.categories, items: state.items, settings: state.settings
+      }));
+    } catch (e) { /* التخزين ممتلئ أو ممنوع */ }
+  }
+  function readCache() {
+    try { return JSON.parse(localStorage.getItem(CACHE_KEY) || 'null'); } catch (e) { return null; }
+  }
+  function clearCache() { try { localStorage.removeItem(CACHE_KEY); } catch (e) { /* */ } }
+
   async function loadAll() {
-    const [cats, items, settings] = await Promise.all([
-      db.from('categories').select('*').order('sort_order').order('name'),
-      db.from('items').select('*').order('name'),
-      db.from('settings').select('*').eq('id', 1).maybeSingle()
-    ]);
-    const err = cats.error || items.error || settings.error;
-    if (err) throw err;
-    state.categories = cats.data;
-    state.items = items.data;
-    state.settings = settings.data;
-    state.loaded = true;
+    let cats, items, settings;
+    try {
+      [cats, items, settings] = await Promise.all([
+        db.from('categories').select('*').order('sort_order').order('name'),
+        db.from('items').select('*').order('name'),
+        db.from('settings').select('*').eq('id', 1).maybeSingle()
+      ]);
+    } catch (e) {
+      cats = { error: e };
+    }
+    const err = cats.error || (items && items.error) || (settings && settings.error);
+    if (err) {
+      const cached = readCache();
+      if (!cached) throw err;
+      Object.assign(state, { categories: cached.categories, items: cached.items, settings: cached.settings, loaded: true, offline: true, cachedAt: cached.at });
+      document.body.classList.add('is-offline');
+      return state;
+    }
+    Object.assign(state, { categories: cats.data, items: items.data, settings: settings.data, loaded: true, offline: false, cachedAt: null });
+    document.body.classList.remove('is-offline');
+    saveCache();
     return state;
   }
 
@@ -160,7 +184,8 @@
   }
 
   window.KP = {
-    db, state, CURRENCIES, screens: {},
+    VERSION: '1.0.0',
+    db, state, CURRENCIES, screens: {}, clearCache,
     esc, normalize, fmtPrice, parseNum, fmtTyping, fmtDate, findDuplicates,
     loadAll, mainCategories, subCategories, categoryById, categoryPath, countInCategory, knownUnits,
     toast, errorText,

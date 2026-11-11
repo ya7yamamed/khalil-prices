@@ -7,6 +7,7 @@
   <title>مخزن الخليل — الأسعار</title>
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -53,6 +54,10 @@
       </div>
     </header>
 
+    <div class="offline-banner" role="status">
+      <span>بلا نت — عم تشوف آخر نسخة محفوظة. التعديل بيرجع يشتغل لما يرجع النت.</span>
+    </div>
+
     <main id="screen"></main>
 
     <nav class="nav" aria-label="التنقل الرئيسي">
@@ -83,9 +88,14 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/config.js"></script>
   <script src="js/core.js"></script>
+  <script src="js/excel.js"></script>
+  <script src="js/whatsapp-builder.js"></script>
   <script src="js/screens/home.js"></script>
   <script src="js/screens/groups.js"></script>
   <script src="js/screens/item-form.js"></script>
+  <script src="js/screens/items.js"></script>
+  <script src="js/screens/prices.js"></script>
+  <script src="js/screens/whatsapp.js"></script>
   <script src="js/screens/settings.js"></script>
   <script src="js/main.js"></script>
 </body>

@@ -31,10 +31,28 @@
     try {
       await KP.loadAll();
     } catch (e) {
-      $('screen').innerHTML = '<div class="alert alert-danger">ما قدرت أحمّل البيانات. تأكد من النت وحدّث الصفحة.</div>';
+      $('screen').innerHTML = '<div class="alert alert-danger">ما قدرت أحمّل البيانات، وما في نسخة محفوظة على هالجهاز. تأكد من النت وحدّث الصفحة.</div>';
+      started = false;
       return;
     }
     route();
+  }
+
+  // لما يرجع النت: نجيب آخر نسخة ونحدّث الشاشات اللي ما فيها إدخال
+  window.addEventListener('online', async () => {
+    if (!started) return;
+    await KP.loadAll().catch(() => {});
+    if (!KP.state.offline) {
+      KP.toast('رجع النت ✓ البيانات محدّثة');
+      const name = (location.hash || '#home').slice(1).split('/')[0];
+      if (['home', 'items', 'settings', 'groups', ''].includes(name)) route();
+    }
+  });
+  window.addEventListener('offline', () => document.body.classList.add('is-offline'));
+
+  // Service Worker: يخلي التطبيق يفتح بلا نت
+  if ('serviceWorker' in navigator && location.protocol === 'https:') {
+    window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
   }
 
   $('login-form').addEventListener('submit', async (e) => {
@@ -69,5 +87,18 @@
   }
   KP.route = route;
   KP.go = (hash) => { if (location.hash === hash) route(); else location.hash = hash; };
-  window.addEventListener('hashchange', route);
+
+  // حارس المغادرة: شاشة فيها تعديلات غير محفوظة بتعرّف KP.leaveGuard
+  let lastHash = location.hash, reverting = false;
+  window.addEventListener('hashchange', () => {
+    if (reverting) { reverting = false; return; }
+    if (KP.leaveGuard && !KP.leaveGuard()) {
+      reverting = true;
+      location.hash = lastHash;
+      return;
+    }
+    KP.leaveGuard = null;
+    lastHash = location.hash;
+    route();
+  });
 })();
