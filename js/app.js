@@ -40,9 +40,12 @@
     err.classList.add('hidden');
     const btn = e.submitter || e.target.querySelector('button');
     btn.disabled = true; btn.textContent = 'جاري الدخول…';
-    const { error } = await db.auth.signInWithPassword({ email: $('login-email').value.trim(), password: $('login-pass').value });
+    // اسم المستخدم يتحول داخلياً لإيميل وهمي، لأن Supabase يحتاج إيميل
+    const user = $('login-email').value.trim().toLowerCase();
+    const email = user.includes('@') ? user : user + '@khalil.local';
+    const { error } = await db.auth.signInWithPassword({ email, password: $('login-pass').value });
     btn.disabled = false; btn.textContent = 'دخول';
-    if (error) { err.textContent = 'الإيميل أو كلمة السر غلط'; err.classList.remove('hidden'); }
+    if (error) { err.textContent = 'اسم المستخدم أو كلمة السر غلط'; err.classList.remove('hidden'); }
   });
 
   db.auth.onAuthStateChange((_event, session) => { session ? showApp() : showLogin(); });
