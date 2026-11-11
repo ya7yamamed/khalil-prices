@@ -3,9 +3,9 @@
  * المكتبات والخطوط الخارجية: الكاش أولاً.
  * طلبات Supabase ما بتمر من هون أبداً.
  */
-const CACHE = 'kp-shell-v1';
+const CACHE = 'kp-shell-v2';
 const SHELL = [
-  './', 'index.html', 'manifest.json', 'css/app.css', 'icons/icon.svg', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png',
+  './', 'index.html', 'manifest.json', 'css/app.css', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png', 'icons/apple-touch-icon.png', 'icons/favicon-32.png', 'icons/favicon-48.png',
   'js/config.js', 'js/core.js', 'js/excel.js', 'js/whatsapp-builder.js', 'js/main.js',
   'js/screens/home.js', 'js/screens/groups.js', 'js/screens/item-form.js', 'js/screens/items.js',
   'js/screens/prices.js', 'js/screens/whatsapp.js', 'js/screens/settings.js'
