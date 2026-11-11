@@ -32,12 +32,13 @@ a { color: inherit; text-decoration: none; }
 .num { direction: ltr; unicode-bidi: isolate; }
 
 /* ===== الهيكل ===== */
-.app { max-width: 560px; margin: 0 auto; min-height: 100dvh; display: flex; flex-direction: column; }
+.app { min-height: 100dvh; display: flex; flex-direction: column; }
+.band > *, main { width: 100%; max-width: 560px; margin-inline: auto; }
 .band { background: var(--band); color: var(--on-band); padding: 16px 20px; }
 .band h1 { margin: 0; font-size: 22px; font-weight: 800; line-height: 1.3; }
 .band .sub { font-size: 13px; color: var(--band-muted); }
 .band-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-main { flex: 1; padding: 14px 16px 110px; display: flex; flex-direction: column; gap: 14px; }
+main { flex: 1; box-sizing: border-box; padding: 14px 16px 110px; display: flex; flex-direction: column; gap: 14px; }
 
 .card { background: var(--card); border-radius: 16px; box-shadow: var(--shadow); padding: 14px; }
 .btn {

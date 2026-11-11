@@ -74,7 +74,7 @@
       <section class="card stats" aria-label="إحصائيات">
         <div><b id="st-items">…</b><span>صنف</span></div>
         <div><b id="st-groups">…</b><span>مجموعة</span></div>
-        <div><b id="st-week" style="color: var(--accent-ink)">…</b><span>عُدّل هالأسبوع</span></div>
+        <div><b id="st-week" style="color: var(--accent-ink)">…</b><span>تعدّل هالأسبوع</span></div>
       </section>
       <div id="home-msg"></div>`;
     const weekAgo = new Date(Date.now() - 7 * 864e5).toISOString();
